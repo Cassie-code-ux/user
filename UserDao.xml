@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.UserDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.username as username
+        ,a.password as password
+        ,a.name as name
+        ,a.phone as phone
+        ,a.id_number as idNumber
+        ,a.photo as photo
+        ,a.sex_types as sexTypes
+        ,a.email as email
+        ,a.new_money as newMoney
+        ,a.content as content
+        ,a.delete_status as deleteStatus
+        ,a.create_time as createTime
+    </sql>
+
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.UserView">
+        SELECT
+        <include refid="Base_Column_List" />
+
+        --         级联表的字段
+
+        FROM `user` a
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="params.username != '' and params.username != null and params.username != 'null'">
+                and a.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test="params.password != '' and params.password != null and params.password != 'null'">
+                and a.password like CONCAT('%',#{params.password},'%')
+            </if>
+            <if test="params.name != '' and params.name != null and params.name != 'null'">
+                and a.name like CONCAT('%',#{params.name},'%')
+            </if>
+            <if test="params.phone != '' and params.phone != null and params.phone != 'null'">
+                and a.phone like CONCAT('%',#{params.phone},'%')
+            </if>
+            <if test="params.idNumber != '' and params.idNumber != null and params.idNumber != 'null'">
+                and a.id_number like CONCAT('%',#{params.idNumber},'%')
+            </if>
+            <if test="params.sexTypes != null">
+                and a.sex_types = #{params.sexTypes}
+            </if>
+            <if test="params.email != '' and params.email != null and params.email != 'null'">
+                and a.email like CONCAT('%',#{params.email},'%')
+            </if>
+            <if test="params.newMoneyStart != null">
+                <![CDATA[ and a.new_money >= #{params.newMoneyStart} ]]>
+            </if>
+            <if test="params.newMoneyEnd != null">
+                <![CDATA[ and a.new_money <= #{params.newMoneyEnd} ]]>
+            </if>
+            <if test="params.content != '' and params.content != null and params.content != 'null'">
+                and a.content like CONCAT('%',#{params.content},'%')
+            </if>
+            <if test="params.deleteStatusStart != null and params.deleteStatusStart != ''">
+                <![CDATA[ and a.delete_status >= #{params.deleteStatusStart} ]]>
+            </if>
+            <if test="params.deleteStatusEnd != null and params.deleteStatusEnd != ''">
+                <![CDATA[ and a.delete_status <= #{params.deleteStatusEnd} ]]>
+            </if>
+            <if test="params.deleteStatus != null and params.deleteStatus != ''">
+                and a.delete_status = #{params.deleteStatus}
+            </if>
+        </where>
+        order by a.${params.orderBy} desc
+    </select>
+
+</mapper>

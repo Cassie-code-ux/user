@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>用户详情页</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/style.css"/>
+    <link rel="stylesheet" href="../../css/theme.css"/>
+    <link rel="stylesheet" href="../../css/common.css"/>
+    <link rel="stylesheet" href="../../xznstatic/css/bootstrap.min.css">
+</head>
+<style>
+    .detail-container {
+        padding: 20px;
+    }
+    .detail-item {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .detail-label {
+        font-weight: bold;
+        display: inline-block;
+        width: 100px;
+    }
+    .avatar-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+</style>
+<body>
+
+<div id="app">
+    <div class="detail-container">
+        <div class="avatar-container">
+            <img v-if="detail.photo" :src="detail.photo" class="avatar">
+            <img v-else src="../../images/default-avatar.png" class="avatar">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">账号：</span>
+            <span>{{detail.username}}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">姓名：</span>
+            <span>{{detail.name}}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">联系方式：</span>
+            <span>{{detail.phone}}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">身份证号：</span>
+            <span>{{detail.idNumber}}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">性别：</span>
+            <span>{{detail.sexTypes === 1 ? '男' : detail.sexTypes === 2 ? '女' : '未设置'}}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">邮箱：</span>
+            <span>{{detail.email}}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">账户余额：</span>
+            <span>{{detail.newMoney | formatMoney}}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">简介/备注：</span>
+            <span v-html="myFilters(detail.content)"></span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">注册时间：</span>
+            <span>{{detail.createTime | formatDate}}</span>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../xznstatic/js/element.min.js"></script>
+<link rel="stylesheet" href="../../xznstatic/css/element.min.css">
+<script src="../../js/config.js"></script>
+<script src="../../modules/config.js"></script>
+<script src="../../js/utils.js"></script>
+
+<script>
+    Vue.filter('formatDate', function(value) {
+        if (!value) return '';
+        return layui.util.toDateString(value, 'yyyy-MM-dd HH:mm:ss');
+    });
+
+    Vue.filter('formatMoney', function(value) {
+        if (value === null || value === undefined) return '0.00';
+        return parseFloat(value).toFixed(2);
+    });
+
+    Vue.prototype.myFilters= function (msg) {
+        if(msg != null){
+            return msg.replace(/\n/g, "<br>");
+        }else{
+            return "";
+        }
+    };
+
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            detail: {
+                id: 0,
+                username: '',
+                name: '',
+                phone: '',
+                idNumber: '',
+                photo: '',
+                sexTypes: null,
+                email: '',
+                newMoney: 0.00,
+                content: '',
+                createTime: ''
+            }
+        },
+        methods: {
+            jump(url) {
+                jump(url)
+            },
+            isAuth(tablename, button) {
+                return isFrontAuth(tablename, button)
+            },
+            getDetail() {
+                // 请求统一用户表接口
+                layui.http.request('user', 'info/' + this.detail.id, {}, 'get', function(res) {
+                    if (res.code === 0) {
+                        vue.detail = res.data;
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                });
+            }
+        },
+        created() {
+            var id = layui.http.getParam('id');
+            if (id) {
+                this.detail.id = id;
+                this.getDetail();
+            }
+        }
+    });
+
+    layui.use(['layer', 'form', 'element', 'http', 'jquery'], function () {
+        var layer = layui.layer;
+        var element = layui.element;
+        var form = layui.form;
+        var http = layui.http;
+        var jquery = layui.jquery;
+    });
+</script>
+</body>
+</html>

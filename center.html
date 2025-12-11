@@ -1,0 +1,461 @@
+<!-- 个人中心 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../xznstatic/css/element.min.css">
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/common.css" />
+</head>
+<style>
+    html::after {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        content: '';
+        display: block;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+    }
+    #swiper {
+        overflow: hidden;
+    }
+    #swiper .layui-carousel-ind li {
+        width: 20px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0,0,0,.3);
+        border-radius: 6px;
+        background-color: #f7f7f7;
+        box-shadow: 0 0 6px rgba(255,0,0,.8);
+    }
+    #swiper .layui-carousel-ind li.layui-this {
+        width: 30px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0,0,0,.3);
+        border-radius: 6px;
+    }
+
+    .index-title {
+        text-align: center;
+        box-sizing: border-box;
+        width: 980px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .index-title span {
+        padding: 0 10px;
+        line-height: 1.4;
+    }
+    .center-container .layui-nav-tree {
+        width: 100%;
+    }
+    .center-container .layui-nav {
+        position: inherit;
+    }
+    .center-container .layui-nav-tree .layui-nav-item {
+        height: 44px;
+        line-height: 44px;
+        font-size: 16px;
+        color: rgba(17, 17, 17, 1);
+        border-width: 0px 0px 1px 0px;
+        border-style: solid;
+        border-radius: 0;
+        background-color: #fff;
+        text-align: center;
+    }
+    .center-container .layui-nav-tree .layui-nav-bar {
+        height: 44px !important;
+        opacity: 0 !important;
+    }
+    .center-container .layui-nav-tree .layui-nav-item.layui-this {
+        font-size: 16px;
+        color: rgba(17, 17, 17, 1);
+        border-width: 0;
+        border-style: solid;
+        border-radius: 0;
+    }
+    .center-container .layui-nav-tree .layui-nav-item:hover {
+        font-size: 14px;
+        color: #fff;
+        border-width: 0;
+        border-style: solid;
+        border-radius: 0;
+    }
+    .center-container .layui-nav-tree .layui-nav-item a {
+        line-height: inherit;
+        height: auto;
+        background-color: inherit;
+        color: inherit;
+        text-decoration: none;
+    }
+    .right-container {
+        position: relative;
+    }
+
+    .right-container .layui-form-item {
+        display: flex;
+        align-items: center;
+    }
+    .right-container .layui-input-block {
+        margin: 0;
+        flex: 1;
+    }
+    .right-container .input .layui-input {
+        padding: 0 12px;
+        height: 40px;
+        font-size: 15px;
+        border-radius: 4px;
+        border-width: 1px;
+        border-style: solid;
+        background-color: #fff;
+        text-align: left;
+    }
+    .right-container .select .layui-input {
+        padding: 0 12px;
+        height: 40px;
+        font-size: 15px;
+        border-radius: 4px;
+        border-width: 1px;
+        border-style: solid;
+        background-color: #fff;
+        text-align: left;
+    }
+    .right-container .date .layui-input {
+        padding: 0 12px;
+        height: 40px;
+        font-size: 15px;
+        color: rgba(160, 67, 26, 1);
+        border-radius: 4px;
+        border-width: 1px;
+        border-style: solid;
+        background-color: #fff;
+        box-shadow: 0 0 0px rgba(255,0,0,.8);
+        text-align: left;
+    }
+
+</style>
+<body>
+<div id="app">
+    <!-- 轮播图 -->
+    <div class="layui-carousel" id="swiper" :style='{"boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 auto","borderColor":"rgba(0,0,0,.3)","borderRadius":"0px","borderWidth":"0","width":"100%","borderStyle":"solid"}'>
+        <div carousel-item>
+            <div v-for="(item,index) in swiperList" :key="index">
+                <img style="width: 100%;height: 100%;object-fit:cover;" :src="item.img" />
+            </div>
+        </div>
+    </div>
+    <!-- 轮播图 -->
+
+    <!-- 标题 -->
+    <div class="index-title sub_backgroundColor" :style='{"padding":"10px","boxShadow":"0 0 2px rgba(160, 67, 26, 1)","margin":"10px auto","borderColor":"rgba(0,0,0,.3)","color":"rgba(255, 255, 255, 1)","borderRadius":"4px","borderWidth":"0","fontSize":"20px","borderStyle":"solid","height":"auto"}'>
+        <span>USER / CENTER</span><span>个人中心</span>
+    </div>
+    <!-- 标题 -->
+
+    <div class="center-container">
+        <!-- 个人中心菜单 -->
+        <div class="left-container" :style='{"padding":"0","boxShadow":"0px ","margin":"0","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0px ","width":"160px","borderStyle":"solid"}'>
+            <ul class="layui-nav layui-nav-tree">
+                <li v-for="(item,index) in centerMenu" v-bind:key="index" class="layui-nav-item" :class="index==0?'layui-this':''">
+                    <a :href="'javascript:jump(\''+item.url+'\')'">{{item.name}}</a>
+                </li>
+            </ul>
+        </div>
+        <!-- 个人中心菜单 -->
+
+        <!-- 个人中心信息表单 -->
+        <div class="right-container sub_borderColor" :style='{"padding":"20px","boxShadow":"0px rgba(255,0,0,.8)","margin":"0","backgroundColor":"#fff","borderRadius":"0","borderWidth":"1px","borderStyle":"solid"}'>
+            <form class="layui-form">
+                <!-- 主键 -->
+                <input type="hidden" v-model="detail.id" name="id" id="id" />
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                        登录账号
+                    </label>
+                    <div class="layui-input-block input">
+                        <input type="text" v-model="detail.username" name="username" id="username" lay-verify="required" placeholder="登录账号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                        姓名/名称
+                    </label>
+                    <div class="layui-input-block input">
+                        <input type="text" v-model="detail.name" name="name" id="name" lay-verify="required" placeholder="请输入姓名或名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                        联系方式
+                    </label>
+                    <div class="layui-input-block input">
+                        <input type="text" v-model="detail.phone" name="phone" id="phone" lay-verify="required|phone" placeholder="请输入联系方式" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                        身份证号
+                    </label>
+                    <div class="layui-input-block input">
+                        <input type="text" v-model="detail.idNumber" name="idNumber" id="idNumber" lay-verify="required|identity" placeholder="请输入身份证号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' style="opacity: 0;" class="layui-form-label">
+                        头像
+                    </label>
+                    <div class="layui-input-block">
+                        <img id="photoImg" style="width: 100px;height: 100px;border-radius: 50%;border: 2px solid #EEEEEE;" :style='{"boxShadow":"0 0 3px rgba(160, 67, 26, 1)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","borderRadius":"10px","borderWidth":"1px","width":"80px","borderStyle":"solid","height":"80px"}' :src="detail.photo">
+                        <input type="hidden" v-model="detail.photo" id="photo" name="photo" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' style="opacity: 0;" class="layui-form-label">
+                        头像
+                    </label>
+                    <div class="layui-input-block">
+                        <button class="main_backgroundColor" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.5)","margin":"0 10px 0 0","borderColor":"#ccc","color":"#fff","borderRadius":"8px","borderWidth":"0","width":"auto","fontSize":"14px","borderStyle":"solid","height":"44px"}' type="button" class="layui-btn btn-theme"
+                                id="photoUpload">
+                            <i v-if="true" :style='{"color":"#fff","show":true,"fontSize":"14px"}' class="layui-icon">&#xe67c;</i>上传头像
+                        </button>
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                        性别
+                    </label>
+                    <div class="layui-input-block select">
+                        <el-select v-model="detail.sexTypes" filterable placeholder="请选择性别" style="border-color: var(--publicMainColor, #808080);" name="sexTypes" id="sexTypes">
+                            <el-option
+                                    v-for="(item,index) in sexTypesList"
+                                    v-bind:key="item.codeIndex"
+                                    :label="item.indexName"
+                                    :value="item.codeIndex">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                        电子邮箱
+                    </label>
+                    <div class="layui-input-block input">
+                        <input type="text" v-model="detail.email" name="email" id="email" lay-verify="required|email" placeholder="请输入电子邮箱" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">
+                        简介/备注
+                    </label>
+                    <div class="layui-input-block input">
+                        <textarea v-model="detail.content" name="content" id="content" placeholder="请输入简介或备注" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item main_borderColor"  :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 0 10px 0","backgroundColor":"#fff","borderRadius":"1px","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                    <label  :style='{"width":"110px","padding":"0 12px 0 0","fontSize":"15px","color":"#333","textAlign":"left"}' class="layui-form-label">余额</label>
+                    <div class="layui-input-inline input">
+                        <input type="number" v-model="detail.newMoney" name="newMoney" id="newMoney" placeholder="余额" autocomplete="off" class="layui-input" disabled="disabled">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        <i class="layui-icon" style="font-size: 20px;color: red;">&#xe65e;</i>
+                        <a id="btn-recharge" href="javascript:void(0)">点我充值</a>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="display: flex;flex-wrap:wrap;">
+                        <button class="main_backgroundColor" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.5)","margin":"10px auto 0","borderColor":"#ccc","color":"#fff","borderRadius":"8px","borderWidth":"0","width":"30%","fontSize":"15px","borderStyle":"solid","height":"44px"}' class="layui-btn btn-submit btn-theme" lay-submit lay-filter="*">更新信息</button>
+                        <button :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.5)","margin":"10px auto","borderColor":"#ccc","backgroundColor":"rgba(255, 0, 0, 1)","color":"rgba(255, 255, 255, 1)","borderRadius":"8px","borderWidth":"0","width":"30%","fontSize":"14px","borderStyle":"solid","height":"44px"}' @click="logout" class="layui-btn btn-submit">退出登录</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- 个人信息表单 -->
+    </div>
+
+</div>
+
+<!-- 外部资源引入 -->
+<script src="../../layui/layui.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../xznstatic/js/element.min.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../modules/config.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/validate.js"></script>
+
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            // 轮播图数据
+            swiperList: [],
+            // 用户详情数据（对应新user表字段）
+            detail: {
+                id: '',
+                username: '',
+                password: '',
+                name: '',
+                phone: '',
+                idNumber: '',
+                photo: '',
+                sexTypes: '',
+                email: '',
+                newMoney: '',
+                content: '',
+                createTime: ''
+            },
+            // 性别字典列表
+            sexTypesList: [],
+            // 个人中心菜单
+            centerMenu: centerMenu
+        },
+        updated: function() {
+            // 表单渲染更新
+            layui.form.render(null, 'myForm');
+        },
+        methods: {
+            // 页面跳转
+            jump(url) {
+                jump(url)
+            },
+            // 退出登录
+            logout(){
+                localStorage.removeItem('Token');
+                localStorage.removeItem('userid');
+                localStorage.removeItem('username');
+                localStorage.removeItem('userTable');
+                window.parent.location.href = '../login/login.html';
+            }
+        }
+    })
+
+    layui.use(['layer', 'element', 'carousel', 'http', 'jquery', 'laydate', 'form', 'upload'], function() {
+        var layer = layui.layer;
+        var element = layui.element;
+        var carousel = layui.carousel;
+        var http = layui.http;
+        var $ = layui.jquery;
+        var form = layui.form;
+        var upload = layui.upload;
+
+        // 充值功能
+        $('#btn-recharge').click(function(e) {
+            layer.open({
+                type: 2,
+                title: '账户充值',
+                area: ['900px', '600px'],
+                content: '../recharge/recharge.html'
+            });
+        });
+
+        // 获取轮播图数据
+        http.request('config/list', 'get', {
+            page: 1,
+            limit: 5
+        }, function(res) {
+            if (res.data.list.length > 0) {
+                let swiperList = [];
+                res.data.list.forEach(item => {
+                    if (item.value) {
+                        swiperList.push({ img: item.value });
+                    }
+                });
+                vue.swiperList = swiperList;
+                // 初始化轮播
+                vue.$nextTick(() => {
+                    carousel.render({
+                        elem: '#swiper',
+                        width: '100%',
+                        height: '450px',
+                        arrow: 'hover',
+                        anim: 'default',
+                        autoplay: true,
+                        interval: 3000,
+                        indicator: 'inside'
+                    });
+                });
+            }
+        });
+
+        // 获取当前用户信息
+        function getUserInfo() {
+            http.request('user/info/' + localStorage.getItem('userid'), 'get', {}, function(res) {
+                if (res.code === 0) {
+                    vue.detail = res.data;
+                } else {
+                    layer.msg('获取用户信息失败：' + res.msg);
+                }
+            });
+        }
+
+        // 性别字典初始化
+        function initSexTypes() {
+            http.request('dictionary/list', 'get', { dictType: 'sex_types' }, function(res) {
+                if (res.code === 0) {
+                    vue.sexTypesList = res.data.list;
+                }
+            });
+        }
+
+        // 头像上传配置
+        upload.render({
+            elem: '#photoUpload',
+            url: '/upload',
+            field: 'file',
+            accept: 'images',
+            done: function(res) {
+                if (res.code === 0) {
+                    vue.detail.photo = res.data.url;
+                    layer.msg('上传成功');
+                } else {
+                    layer.msg('上传失败：' + res.msg);
+                }
+            }
+        });
+
+        // 表单提交
+        form.on('submit(*)', function(data) {
+            http.request('user/update', 'post', data.field, function(res) {
+                if (res.code === 0) {
+                    layer.msg('更新成功', { icon: 1 }, function() {
+                        getUserInfo(); // 重新加载用户信息
+                    });
+                } else {
+                    layer.msg('更新失败：' + res.msg);
+                }
+            });
+            return false;
+        });
+
+        // 初始化
+        getUserInfo();
+        initSexTypes();
+    });
+</script>
+</body>
+</html>
